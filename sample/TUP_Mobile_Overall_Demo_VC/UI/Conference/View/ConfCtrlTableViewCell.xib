@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="ConfCtrlTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nwr-S5-TuR">
+                        <rect key="frame" x="8" y="11" width="130" height="21"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dte-vo-QrJ">
+                        <rect key="frame" x="220" y="6" width="30" height="30"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <state key="normal" image="btn_eye_white_normal"/>
+                        <connections>
+                            <action selector="watchBtnClick:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="ZhZ-BS-zmb"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w0u-8J-XSo">
+                        <rect key="frame" x="250" y="6" width="30" height="30"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <state key="normal" image="btn_mic_off_normal"/>
+                        <connections>
+                            <action selector="micMuteBtnClick:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="uer-H1-oCI"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v10-Ta-DnR">
+                        <rect key="frame" x="282" y="6" width="30" height="30"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <state key="normal" image="btn_list_voicecall_normal"/>
+                        <connections>
+                            <action selector="hangupBtnClick:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="G4o-EG-7pQ"/>
+                        </connections>
+                    </button>
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEN-Mp-jft">
+                        <rect key="frame" x="159" y="6" width="30" height="30"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <state key="normal" image="icon_share_meeting_normal"/>
+                        <connections>
+                            <action selector="kickoutBtnClick:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="WMw-zb-f2f"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XCW-Ox-L2n">
+                        <rect key="frame" x="191" y="6" width="30" height="30"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <state key="normal" image="btn_share_normal"/>
+                        <connections>
+                            <action selector="dataConfBtnClick:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="A9p-jV-3AH"/>
+                        </connections>
+                    </button>
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P0a-GN-jsl">
+                        <rect key="frame" x="128" y="6" width="30" height="30"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <state key="normal" image="bg_id_normal"/>
+                        <connections>
+                            <action selector="presenterBtnClick:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="P3H-fG-Ifa"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="glV-ec-8gh">
+                        <rect key="frame" x="102" y="7" width="30" height="30"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <state key="normal" image="btn_chair_normal"/>
+                    </button>
+                </subviews>
+                <color key="backgroundColor" red="0.6288824677" green="0.73141270879999998" blue="0.83460044860000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="dataConfBtn" destination="XCW-Ox-L2n" id="Yr9-5w-Sno"/>
+                <outlet property="hangupBtn" destination="v10-Ta-DnR" id="Kfx-cf-Km8"/>
+                <outlet property="isChair" destination="glV-ec-8gh" id="tpN-ct-Ibf"/>
+                <outlet property="kickoutBtn" destination="dEN-Mp-jft" id="Iwl-f4-YII"/>
+                <outlet property="micMute" destination="w0u-8J-XSo" id="kLf-8r-guF"/>
+                <outlet property="numLabel" destination="nwr-S5-TuR" id="DHC-Qs-ahw"/>
+                <outlet property="presenterBtn" destination="P0a-GN-jsl" id="b9C-SZ-zUS"/>
+                <outlet property="watchBtn" destination="dte-vo-QrJ" id="vsY-cf-ORw"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="bg_id_normal" width="16" height="16"/>
+        <image name="btn_chair_normal" width="24" height="24"/>
+        <image name="btn_eye_white_normal" width="24" height="24"/>
+        <image name="btn_list_voicecall_normal" width="32" height="32"/>
+        <image name="btn_mic_off_normal" width="24" height="24"/>
+        <image name="btn_share_normal" width="28" height="28"/>
+        <image name="icon_share_meeting_normal" width="28" height="28"/>
+    </resources>
+</document>
