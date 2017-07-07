@@ -26,6 +26,7 @@
 -(void)vcCallRingBack:(VCCallInfo *)callInfo;
 -(void)vcCallConnect:(VCCallInfo *)callInfo;
 -(void)vcCallEnd:(VCCallInfo *)callInfo;
+-(void)vcCallDataConfParam:(CALL_S_DATACONF_PARAM *)data;
 -(void)vcUpgradeVideoCall:(unsigned int)callId;
 -(void)vcUpdateCallType:(BOOL)isVideo;
 
@@ -65,6 +66,7 @@
 @property (nonatomic, copy) VCUser *user;
 @property (nonatomic, retain)  dispatch_source_t heartBeatTimer;
 @property (nonatomic, assign) unsigned int dHandle;
+@property (nonatomic, assign) unsigned int serverType;
 @property (nonatomic, strong) TupHistory * currentHRecord;
 
 + (TUPService *)instance;

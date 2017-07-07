@@ -21,6 +21,9 @@
         self.proxy_port = @"";
         self.password = @"";
         self.server_port = @"";
+        self.auth_server_addr = @"";
+         self.auth_server_port = @"";
+        self.auth_token = @"";
     }
     
     return self;
@@ -36,6 +39,9 @@
     newUser.proxy_port = self.proxy_port;
     newUser.password = self.password;
     newUser.server_port = self.server_port;
+    newUser.auth_server_addr = self.auth_server_addr;
+    newUser.auth_token = self.auth_token;
+    newUser.auth_server_port = self.auth_server_port;
     
     return newUser;
 }

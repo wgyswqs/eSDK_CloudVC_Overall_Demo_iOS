@@ -86,7 +86,53 @@ TUP_VOID onTUPLoginNotify(TUP_UINT32 msgid, TUP_UINT32 param1, TUP_UINT32 param2
         case LOGIN_E_EVT_AUTHORIZE_RESULT://MediaX:SP&IMS Hosted VC
         {
             NSLog(@"LOGIN_E_EVT_AUTHORIZE_RESULT");
-            LOGIN_S_AUTHORIZE_RESULT *authorizeInfo = (LOGIN_S_AUTHORIZE_RESULT *)data;
+            if (param1 == TUP_SUCCESS)
+            {
+                LOGIN_S_AUTHORIZE_RESULT *authorizeInfo = (LOGIN_S_AUTHORIZE_RESULT *)data;
+                if (!authorizeInfo)
+                {
+                    return;
+                }
+                
+                [TUPService instance].user.auth_token = [NSString stringWithUTF8String:authorizeInfo->auth_token];
+                
+                [TUPService instance].user.auth_server_addr = [NSString stringWithUTF8String:authorizeInfo->auth_serinfo.server_uri];
+                
+                [TUPService instance].user.auth_server_port = [NSString stringWithFormat:@"%d", authorizeInfo->auth_serinfo.server_port];
+                [TUPService instance].user.user_id = [NSString stringWithUTF8String:authorizeInfo->sip_info.auth_info.user_name];
+                [TUPService instance].user.user_name = [NSString stringWithFormat:@"%@@%@", [NSString stringWithUTF8String:authorizeInfo->sip_info.auth_info.user_name],[NSString stringWithUTF8String:authorizeInfo->sip_info.sip_url] ];
+                [TUPService instance].user.password = [NSString stringWithUTF8String:authorizeInfo->sip_info.auth_info.password];
+                
+                NSString *proxyAddress = [NSString stringWithUTF8String:authorizeInfo->sip_info.proxy_address];
+                NSArray * proxy = [proxyAddress componentsSeparatedByCharactersInSet: [NSCharacterSet characterSetWithCharactersInString:@":"]];
+                
+                if([proxy count] == 2)
+                {
+                    [TUPService instance].user.server_url = (NSString*)[proxy objectAtIndex:0];
+                    [TUPService instance].user.server_port = (NSString*)[proxy objectAtIndex:1];
+                    [TUPService instance].user.proxy_url = (NSString*)[proxy objectAtIndex:0];
+                    [TUPService instance].user.proxy_port = (NSString*)[proxy objectAtIndex:1];
+                }
+                
+                [[TUPService instance] callConfig:[TUPService instance].user];
+                BOOL ret = [[TUPService instance] callRegister:[TUPService instance].user];
+                if(ret)
+                {
+                    return;
+                }
+                if ([TUPService instance].loginResultBlock)
+                {
+                    [TUPService instance].loginResultBlock(param1,LOGIN_EVENT_AUTHORIZE);
+                }
+            }
+            else
+            {
+                if ([TUPService instance].loginResultBlock)
+                {
+                    [TUPService instance].loginResultBlock(param1,LOGIN_EVENT_AUTHORIZE);
+                }
+            }
+            
         }
             break;
         case LOGIN_E_EVT_SEARCH_SERVER_RESULT:
@@ -176,8 +222,11 @@ TUP_VOID onTUPCallNotify(TUP_UINT32 msgid, TUP_UINT32 param1, TUP_UINT32 param2,
         {
             NSLog(@"CALL_E_EVT_CALL_AUTHORIZE_SUCCESS");
             
-            [[TUPService instance] conferenceConfig:[TUPService instance].user.server_url port:[[TUPService instance].user.server_port intValue]];
-            [[TUPService instance] setAuthCode:[TUPService instance].user.user_name pwd:[TUPService instance].user.password];
+//            [[TUPService instance] conferenceConfig:[TUPService instance].user.server_url port:[[TUPService instance].user.server_port intValue]];
+//            [[TUPService instance] setAuthCode:[TUPService instance].user.user_name pwd:[TUPService instance].user.password];
+            
+             [[TUPService instance] conferenceConfig:[TUPService instance].user.auth_server_addr port:[[TUPService instance].user.auth_server_port intValue]];
+            [[TUPService instance] setAuthToken:[TUPService instance].user.auth_token];
             
             if ([TUPService instance].loginResultBlock)
             {
@@ -564,6 +613,21 @@ TUP_VOID onTUPCallNotify(TUP_UINT32 msgid, TUP_UINT32 param1, TUP_UINT32 param2,
             NSLog(@"CALL_E_EVT_DATA_SENDING %o",CALL_E_EVT_DATA_SENDING);
         }
             break;
+        case CALL_E_EVT_SERVERCONF_DATACONF_PARAM:
+        {
+            NSLog(@"CALL_E_EVT_SERVERCONF_DATACONF_PARAM %d",param1);
+            CALL_S_DATACONF_PARAM *dConfParam = (CALL_S_DATACONF_PARAM *)data;
+            NSLog(@"confurl is %s, dConfParam->passcode: %s,dConfParam->conf_id:%s",dConfParam->acDataConfUrl,dConfParam->acPassCode,dConfParam->acDataConfID);
+            if ([TUPService instance].callDelegate)
+            {
+                [[TUPService instance].callDelegate vcCallDataConfParam:dConfParam];
+            }
+            else
+            {
+                NSLog(@"callDelegate is nil");
+            }
+        }
+            break;
         default:
             break;
     }
@@ -660,20 +724,6 @@ TUP_VOID onTUPConferenceNotify(TUP_UINT32 msgid, TUP_UINT32 param1, TUP_UINT32 p
             
         }
             break;
-        case CONFCTRL_E_EVT_CHAIRMAN_RELEASED_IND:
-        {
-           NSLog(@"CONFCTRL_E_EVT_CHAIRMAN_RELEASED_IND");
-            if ([TUPService instance].confDelegate)
-            {
-                [[TUPService instance].confDelegate vcConfUpdateAttendee:nil role:0 confHandle:param1];
-            }
-            else
-            {
-                NSLog(@"confDelegate is nil");
-            }
-            
-        }
-            break;
         case CONFCTRL_E_EVT_CHAIRMAN_IND:
         {
             if (data == nil)
@@ -685,13 +735,13 @@ TUP_VOID onTUPConferenceNotify(TUP_UINT32 msgid, TUP_UINT32 param1, TUP_UINT32 p
             [attendee copyFromData:data];
             if ([TUPService instance].confDelegate)
             {
-                [[TUPService instance].confDelegate vcConfUpdateAttendee:attendee role:1 confHandle:param1];
+                [[TUPService instance].confDelegate vcConfUpdateAttendee:attendee role:param2 confHandle:param1];
             }
             else
             {
                 NSLog(@"confDelegate is nil");
             }
-
+            
         }
             break;
         case CONFCTRL_E_EVT_REQ_CHAIRMAN_RESULT:

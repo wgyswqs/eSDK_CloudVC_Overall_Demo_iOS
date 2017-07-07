@@ -15,6 +15,7 @@
 -(void)dataConferenceUninit;
 -(CONF_HANDLE)createDataConference:(void *)data;
 -(BOOL)getDataConfParam:(NSString *)confId;
+-(BOOL)getDataConfParam:(void *)data confid:(NSString *)confId;
 - (BOOL)leaveDataConference:(CONF_HANDLE)dataConfHandle;
 - (BOOL)endDataConference:(CONF_HANDLE)dataConfHandle;
 - (BOOL)joinDataConference:(CONF_HANDLE)dataConfHandle;

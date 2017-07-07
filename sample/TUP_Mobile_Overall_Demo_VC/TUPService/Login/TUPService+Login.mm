@@ -80,7 +80,7 @@
     LOGIN_S_AUTHORIZE_PARAM authorizeParams;
     memset(&authorizeParams, 0, sizeof(LOGIN_S_AUTHORIZE_PARAM));
     authorizeParams.auth_type = LOGIN_E_AUTH_NORMAL;
-    strcpy(authorizeParams.user_agent, "TE Mobile");
+    strcpy(authorizeParams.user_agent, "WEB");
     //account+pwd
     LOGIN_S_AUTH_INFO authInfo;
     memset(&authInfo, 0, sizeof(LOGIN_S_AUTH_INFO));
@@ -93,8 +93,8 @@
     loginAuthServer.server_type = type;
     loginAuthServer.server_port = [user.server_port intValue];
     strcpy(loginAuthServer.server_url, [user.server_url UTF8String]);
-    loginAuthServer.proxy_port = [user.proxy_port intValue];
-    strcpy(loginAuthServer.proxy_url, [user.proxy_url UTF8String]);
+    strcpy(loginAuthServer.server_version, "V6R6C00");
+    
     authorizeParams.auth_server = loginAuthServer;
   
     TUP_RESULT result = tup_login_authorize(&authorizeParams);
@@ -107,7 +107,8 @@
 {
    
     self.loginResultBlock = [block copy];
-    return [self authorize:user type:LOGIN_E_SERVER_TYEP_SMC];
+//    return [self authorize:user type:LOGIN_E_SERVER_TYEP_SMC];
+     return [self authorize:user type:LOGIN_E_SERVER_TYPE_MEDIAX];
    
 }
 

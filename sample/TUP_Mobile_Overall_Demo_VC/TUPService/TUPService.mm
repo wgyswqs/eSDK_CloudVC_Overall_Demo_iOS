@@ -67,24 +67,24 @@ static TUPService *g_tupService = nil;
 }
 
 
--(BOOL)serviceStart
-{
-    TUP_S_INIT_PARAM param;
-    memset(&param, 0, sizeof(TUP_S_INIT_PARAM));
-    
-    param.reserved = TUP_FALSE;
-    param.with_ws_service = TUP_FALSE;
-    
-    TUP_RESULT ret = tup_service_startup(&param);
-    NSLog(@"tup_service_startup ret:%d",ret);
-    return ret==TUP_SUCCESS?YES:NO;
-}
--(BOOL)serviceShutdown
-{
-    TUP_RESULT ret = tup_service_shutdown();
-    NSLog(@"tup_service_shutdown ret:%d",ret);
-    return ret==TUP_SUCCESS?YES:NO;
-}
+//-(BOOL)serviceStart
+//{
+//    TUP_S_INIT_PARAM param;
+//    memset(&param, 0, sizeof(TUP_S_INIT_PARAM));
+//    
+//    param.reserved = TUP_FALSE;
+//    param.with_ws_service = TUP_FALSE;
+//    
+//    TUP_RESULT ret = tup_service_startup(&param);
+//    NSLog(@"tup_service_startup ret:%d",ret);
+//    return ret==TUP_SUCCESS?YES:NO;
+//}
+//-(BOOL)serviceShutdown
+//{
+//    TUP_RESULT ret = tup_service_shutdown();
+//    NSLog(@"tup_service_shutdown ret:%d",ret);
+//    return ret==TUP_SUCCESS?YES:NO;
+//}
 
 
 @end

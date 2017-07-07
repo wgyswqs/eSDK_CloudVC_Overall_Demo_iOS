@@ -126,6 +126,37 @@
     return result == TC_OK ? YES : NO;
 }
 
+-(BOOL)getDataConfParam:(void *)data confid:(NSString *)confId
+{
+    
+    if (data == NULL)
+    {
+        return NO;
+    }
+    CALL_S_DATACONF_PARAM *dConfParam = (CALL_S_DATACONF_PARAM *)data;
+    
+    CONFCTRL_S_GET_DATACONF_PARAMS *dataConfParams = (CONFCTRL_S_GET_DATACONF_PARAMS *)malloc(sizeof(CONFCTRL_S_GET_DATACONF_PARAMS));
+    memset_s(dataConfParams, sizeof(CONFCTRL_S_GET_DATACONF_PARAMS), 0, sizeof(CONFCTRL_S_GET_DATACONF_PARAMS));
+ 
+    strcpy(dataConfParams->conf_url, dConfParam->acDataConfUrl);
+//    strcpy(dataConfParams->passcode, dConfParam->acPassCode);
+     strcpy(dataConfParams->password, dConfParam->acPassCode);
+    strcpy(dataConfParams->sip_num, [[TUPService instance].user.user_name UTF8String]);
+    NSString *confIdd = [NSString stringWithFormat:@"%d",dConfParam->ulConfID];
+//    strcpy(dataConfParams->conf_id, [confIdd UTF8String]);
+    strcpy(dataConfParams->conf_id, dConfParam->acDataConfID);
+    strcpy(dataConfParams->random, dConfParam->acDataRandom);
+    
+    dataConfParams->type = 3;
+    
+    NSLog(@"confurl is %s, dataConfParams->passcode: %s,dataConfParams->conf_id:%s",dataConfParams->conf_url,dataConfParams->passcode,dataConfParams->conf_id);
+    
+    TUP_RESULT result  = tup_confctrl_get_dataconf_params(dataConfParams);
+    NSLog(@"tup_confctrl_get_dataconf_params result: %d",result);
+    free(dataConfParams);
+    return result == TC_OK ? YES : NO;
+}
+
 
 
 -(BOOL)getDataConfParam:(NSString *)confId url:(NSString *)confurl
@@ -346,14 +377,14 @@
 {
     
     TUP_RESULT result = tup_conf_user_set_role(dataConfHandle, [userid intValue], role);//CONF_ROLE_PRESENTER CONF_ROLE_HOST
-    NSLog(@"tup_conf_user_set_role result : %d,userid : %d,role is:%#x",result,[userid intValue],role);
+    NSLog(@"tup_conf_user_set_role result : %d,role is:%#x",result,role);
     return result == TC_OK ? YES : NO;
 }
 
 -(BOOL)kickOutUser:(NSString *)userid confHandle:(CONF_HANDLE)dataConfHandle
 {
     TUP_RESULT result = tup_conf_user_kickout(dataConfHandle, [userid intValue]);
-    NSLog(@"tup_conf_user_kickout result : %d,userid : %d",result,[userid intValue]);
+    NSLog(@"tup_conf_user_kickout result : %d",result);
     return result == TC_OK ? YES : NO;
 }
 

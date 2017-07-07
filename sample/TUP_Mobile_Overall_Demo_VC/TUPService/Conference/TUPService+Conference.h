@@ -14,7 +14,9 @@
 -(void)conferenceInit;
 -(void)conferenceConfig:(NSString *)serverAddr port:(int)port;
 -(BOOL)setAuthCode:(NSString *)account pwd:(NSString *)password;
+-(BOOL)setAuthToken:(NSString *)token;
 -(BOOL)conferenceBook:(NSArray *)siteInfo type:(VC_CONF_TYPE)type;
+-(BOOL)conferenceBook:(NSArray *)siteInfo hostType:(VC_CONF_TYPE)type;
 -(int)createConfHandle:(VCMCUConfInfo *)mcuInfo;
 
 -(BOOL)addAttendee:(NSString *)siteInfo confHandle:(int)confHandle;

@@ -53,7 +53,9 @@
     {
         return;
     }
-    TUP_RESULT ret = tup_confctrl_set_conf_env_type(CONFCTRL_E_CONF_ENV_ON_PREMISE_VC);
+    
+//    TUP_RESULT ret = tup_confctrl_set_conf_env_type(CONFCTRL_E_CONF_ENV_ON_PREMISE_VC);
+    TUP_RESULT ret = tup_confctrl_set_conf_env_type(CONFCTRL_E_CONF_ENV_HOSTED_VC);
     NSLog(@"tup_confctrl_set_conf_env_type result: %d",ret);
     
     CONFCTRL_S_SERVER_PARA *serverParam = (CONFCTRL_S_SERVER_PARA *)malloc(sizeof(CONFCTRL_S_SERVER_PARA));
@@ -78,9 +80,131 @@
     
     //    MediaX:SP&IMS Hosted VC
     //    TUP_RESULT ret = tup_confctrl_set_token([token UTF8String]);
-    //    TUPLOG(@"tup_confctrl_set_token result : %d, token : %@",ret,token);
+    //    NSLog(@"tup_confctrl_set_token result : %d, token : %@",ret,token);
 
     return ret == TUP_SUCCESS ? YES : NO;
+}
+
+-(BOOL)setAuthToken:(NSString *)token
+{
+    if (0 == token.length)
+    {
+        return NO;
+    }
+    
+    TUP_RESULT ret = tup_confctrl_set_token((TUP_CHAR *)[token UTF8String]);
+    NSLog(@"tup_confctrl_set_token result : %d",ret);
+    
+    return ret == TUP_SUCCESS ? YES : NO;
+}
+
+
+#define MEDIAX_MEETING_LEAST_AUDIOATTENDER   3
+#define MEDIAX_MEETING_LEAST_VIDEOATTENDER   2
+
+-(BOOL)conferenceBook:(NSArray *)siteInfo hostType:(VC_CONF_TYPE)type
+{
+    CONFCTRL_S_BOOK_CONF_INFO_MEDIAX *bookConfInfo = (CONFCTRL_S_BOOK_CONF_INFO_MEDIAX *)malloc(sizeof(CONFCTRL_S_BOOK_CONF_INFO_MEDIAX));
+    memset(bookConfInfo, 0, sizeof(CONFCTRL_S_BOOK_CONF_INFO_MEDIAX));
+    
+    NSMutableArray *sites = [NSMutableArray arrayWithArray:siteInfo];
+    [sites insertObject:self.user.user_id atIndex:0];
+//    [sites addObject:self.user.user_name ];
+    
+    bookConfInfo->size = [sites count];
+    
+    if(bookConfInfo->size < MEDIAX_MEETING_LEAST_VIDEOATTENDER)
+    {
+        bookConfInfo->size = MEDIAX_MEETING_LEAST_VIDEOATTENDER;
+    }
+    bookConfInfo->conf_type = CONFCTRL_E_CONF_TYPE_NORMAL;
+    if (type == 0)
+    {
+        bookConfInfo->media_type = CONFCTRL_E_CONF_MEDIATYPE_FLAG_HDVIDEO;
+    }
+    else
+    {
+         bookConfInfo->media_type = CONFCTRL_E_CONF_MEDIATYPE_FLAG_HDVIDEO | CONFCTRL_E_CONF_MEDIATYPE_FLAG_DATA ;//| CONFCTRL_E_CONF_MEDIATYPE_FLAG_DATA;
+    }
+   
+    //会议名
+    bookConfInfo->allow_invite = TUP_TRUE;  //允许外邀
+    bookConfInfo->auto_invite = TUP_TRUE;   //自动邀请
+    bookConfInfo->allow_video_control = TUP_TRUE;//允许视频控制
+    
+    bookConfInfo->timezone = CONFCTRL_E_TIMEZONE_BEIJING; //时区
+    
+    unsigned long confLen = 2 * 60 * 60;    //默认时间120min
+    //会议时长(必选)
+    bookConfInfo->conf_len = confLen;
+    strncpy(bookConfInfo->subject, [self.user.user_name UTF8String], [self.user.user_name length]);
+    //入会欢迎声开关
+    bookConfInfo->welcome_voice_enable = CONFCTRL_E_CONF_WARNING_TONE_DEFAULT;
+    
+    //成员入会提示音开关
+    bookConfInfo->enter_prompt = CONFCTRL_E_CONF_WARNING_TONE_DEFAULT;
+    
+    //成员离会提示音开关
+    bookConfInfo->leave_prompt = CONFCTRL_E_CONF_WARNING_TONE_DEFAULT;
+    
+    //会议过滤
+    bookConfInfo->conf_filter = TUP_TRUE;
+    
+    //会议是否自动启动录制
+    bookConfInfo->record_flag = TUP_FALSE;
+    
+    //会议是否自动延长会议
+    bookConfInfo->auto_prolong = TUP_FALSE;
+    
+    //会议是否为多流视频会议
+    bookConfInfo->multi_stream_flag = TUP_FALSE;
+    
+    //会议提醒方式
+    bookConfInfo->reminder = CONFCTRL_E_REMINDER_TYPE_NONE;
+    
+    //会议默认语言
+    bookConfInfo->language = CONFCTRL_E_LANGUAGE_EN_US;
+    
+    
+    //会议媒体加密模式
+    bookConfInfo->conf_encrypt_mode = CONFCTRL_E_ENCRYPT_MODE_NONE;
+    
+    //预订者的用户类型
+    bookConfInfo->user_type = CONFCTRL_E_USER_TYPE_MOBILE;
+    
+    //与会人员
+    bookConfInfo->num_of_attendee = [sites count];
+    
+    //与会人员
+    CONFCTRL_S_ATTENDEE_MEDIAX *addterminalinfo = (CONFCTRL_S_ATTENDEE_MEDIAX *)malloc(sizeof(CONFCTRL_S_ATTENDEE_MEDIAX)*bookConfInfo->num_of_attendee);
+    memset(addterminalinfo, 0, sizeof(CC_AddTerminalInfo)*bookConfInfo->num_of_attendee);
+    
+    for (int i = 0; i< [sites count]; i++)
+    {
+        NSString *addtendeeNumber = [NSString stringWithFormat:@"sip:%@@huawei.com", [sites objectAtIndex:i] ];
+        
+        strncpy(addterminalinfo[i].number, [addtendeeNumber UTF8String], [addtendeeNumber length]);
+        
+        strncpy(addterminalinfo[i].name, [[sites objectAtIndex:i] UTF8String], [[sites objectAtIndex:i] length]);
+        
+        addterminalinfo[i].type = CONFCTRL_E_ATTENDEE_TYPE_NORMAL;
+        
+        if (i == 0)
+        {
+            addterminalinfo[i].role = CONFCTRL_E_CONF_ROLE_CHAIRMAN; //主席
+        } else {
+            addterminalinfo[i].role = CONFCTRL_E_CONF_ROLE_ATTENDEE; //普通与会者
+        }
+    }
+    
+    bookConfInfo->attendee = addterminalinfo;
+    
+    TUP_RESULT ret = tup_confctrl_book_conf(bookConfInfo);
+    NSLog(@"tup_confctrl_book_conf result : %d",ret);
+    
+    free(bookConfInfo);
+    return ret == TUP_SUCCESS ? YES : NO;
+    
 }
 
 -(BOOL)conferenceBook:(NSArray *)siteInfo type:(VC_CONF_TYPE)type

@@ -14,6 +14,7 @@
 
 
 static CallManager *callBusinessManager = nil;
+static CALL_S_DATACONF_PARAM *_dataConfParam = nil;
 
 @interface CallManager ()
 {
@@ -22,6 +23,7 @@ static CallManager *callBusinessManager = nil;
     CallAlertView *_outgoingCallAlert;
     CallConnectView *_callConnectView;
     NSMutableArray *_confSites;
+    
 }
 
 @end
@@ -119,8 +121,21 @@ static CallManager *callBusinessManager = nil;
     
 }
 
+-(void)vcCallDataConfParam:(CALL_S_DATACONF_PARAM *)data
+{
+    if (!_dataConfParam) {
+        _dataConfParam = (CALL_S_DATACONF_PARAM *)malloc(sizeof(CALL_S_DATACONF_PARAM));
+    }
+    memset(_dataConfParam, 0, sizeof(CALL_S_DATACONF_PARAM));
+    memcpy(_dataConfParam, data, sizeof(CALL_S_DATACONF_PARAM));
+}
+
 -(void)vcCallEnd:(VCCallInfo *)callInfo{
     NSLog(@"vcCallEnd");
+    
+    if (_dataConfParam) {
+        free(_dataConfParam);
+    }
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [_callConnectView dismiss];
@@ -203,7 +218,8 @@ static CallManager *callBusinessManager = nil;
         
         if (![_callConnectView.callInfo.confInfo.confMediaType isEqualToString:@"0"])
         {
-            [[TUPService instance] getDataConfParam:_callConnectView.callInfo.confInfo.confID];
+//            [[TUPService instance] getDataConfParam:_callConnectView.callInfo.confInfo.confID];
+            [[TUPService instance] getDataConfParam:_dataConfParam confid:_callConnectView.callInfo.confInfo.confID];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -218,7 +234,8 @@ static CallManager *callBusinessManager = nil;
         _callConnectView.callInfo.confInfo.attendee = attendee;
         if (![_callConnectView.callInfo.confInfo.confMediaType isEqualToString:@"0"])
         {
-            [[TUPService instance] getDataConfParam:_callConnectView.callInfo.confInfo.confID];
+//            [[TUPService instance] getDataConfParam:_callConnectView.callInfo.confInfo.confID];
+             [[TUPService instance] getDataConfParam:_dataConfParam confid:_callConnectView.callInfo.confInfo.confID];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -314,7 +331,7 @@ static CallManager *callBusinessManager = nil;
 
 -(void)vcDataConfUpdateRecord:(VCDConfRecord *)record type:(int)type
 {
-    NSLog(@"vcDataConfUpdateRecord %@ : %@ ,type :%d",record.user_alt_id,record.user_name ,type);
+    NSLog(@"vcDataConfUpdateRecord %d : %@ ,type :%d",record.user_alt_id,record.user_name ,type);
     
     if ([record.user_name isEqualToString:[TUPService instance].user.user_name])
     {

@@ -18,5 +18,7 @@
 @property(nonatomic,copy)NSString *server_url;
 @property(nonatomic,copy)NSString *proxy_port;
 @property(nonatomic,copy)NSString *proxy_url;
-
+@property(nonatomic,copy)NSString *auth_token;
+@property(nonatomic,copy)NSString *auth_server_addr;
+@property(nonatomic,copy)NSString *auth_server_port;
 @end

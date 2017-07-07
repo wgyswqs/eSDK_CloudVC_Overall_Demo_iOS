@@ -74,7 +74,9 @@
 }
 - (IBAction)OKBtnClick:(id)sender {
     if (_attendeeListArray.count >0) {
-        if ([[TUPService instance] conferenceBook:_attendeeListArray type:self.type]) {
+//        if ([[TUPService instance] conferenceBook:_attendeeListArray type:self.type])
+        if ([[TUPService instance] conferenceBook:_attendeeListArray hostType:self.type])
+        {
             [self dismissViewControllerAnimated:YES completion:nil];
             return;
         }

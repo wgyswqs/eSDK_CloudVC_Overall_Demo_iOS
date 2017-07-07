@@ -38,6 +38,10 @@
 - (IBAction)loginBtnClick:(id)sender
 {
     VCUser *user = [[VCUser alloc] init];
+    user.user_name = @"tesoft02@huawei.com";
+    user.password = @"Aa123456";
+    user.server_url = @"218.4.33.69";
+    user.server_port = @"443";
     /*user.user_name = @"lsy01";
     user.password = @"Huawei@123";
     user.server_url = @"172.22.10.32";
@@ -48,12 +52,12 @@
     user.sipPassword = @"026e318167ce6593c566cb823b936bee";
     user.sipServer_Port=@"5062";
     user.sipServer_url =@"172.22.8.57";*/
-    user.user_name = self.userName.text;
-    user.password = self.password.text;
-    user.server_url = self.regServerUrl.text;
-    user.server_port = self.port.text;
-    user.proxy_url = self.proxyServerUrl.text;
-    user.proxy_port = self.port.text;
+//    user.user_name = self.userName.text;
+//    user.password = self.password.text;
+//    user.server_url = self.regServerUrl.text;
+//    user.server_port = self.port.text;
+//    user.proxy_url = self.proxyServerUrl.text;
+//    user.proxy_port = self.port.text;
     [[TUPService instance] login:user result:^( int errCode, LOGIN_EVENT eType) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (errCode == TUP_SUCCESS)
